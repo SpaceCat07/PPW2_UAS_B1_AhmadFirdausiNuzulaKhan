@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'driver' =,
+    'driver' => "argon2id",
 
     /*
     |--------------------------------------------------------------------------
@@ -48,5 +48,11 @@ return [
         'threads' => 1,
         'time' => 4,
     ],
+
+    'argon2id' => [
+    'memory' => 1024, // Jumlah memori yang digunakan (dalam kilobyte)
+    'threads' => 2,   // Jumlah thread yang digunakan
+    'time' => 2,      // Jumlah iterasi
+]
 
 ];
