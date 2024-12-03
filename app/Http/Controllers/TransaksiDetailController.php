@@ -21,7 +21,7 @@ class TransaksiDetailController extends Controller
     {
         $transaksi = Transaksi::with('transaksidetail')->findOrFail($request->id_transaksi);
 
-        return view('transaksidetail.detail', );
+        return view('transaksidetail.detail', compact('transaksi'));
     }
 
     public function edit($id)
@@ -39,14 +39,18 @@ class TransaksiDetailController extends Controller
         ]);
 
         // Gunakan transaction
+        $transaksidetail = TransaksiDetail::findOrFail($id);
+        $transaksi = Transaksi::find($transaksidetail->id_transaksi);
         try {
             $transaksidetail->nama_produk = $request->input('nama_produk');
             $transaksidetail->harga_satuan = $request->input('harga_satuan');
             $transaksidetail->jumlah = $request->input('jumlah');
-            $transaksidetail->subtotal = harga_satuan * jumlah
+            $transaksidetail->subtotal = $request -> harga_satuan * $request -> jumlah;
 
-            $transaksi->total_harga = sum subtotal
-            $transaksi->kembalian = bayar - total_harga; // hapus rumus
+
+            $transaksi->total_harga = sum($transaksidetail->subtotal);
+            // $transaksi->kembalian = bayar - total_harga; // hapus rumus
+            $transaksi -> kembalian = $transaksi -> bayar - $transaksi -> total_harga;
 
             return redirect('transaksidetail/'.$transaksidetail->id_transaksi)->with('pesan', 'Berhasil mengubah data');
         } catch (\Exception $e) {
@@ -55,13 +59,15 @@ class TransaksiDetailController extends Controller
         }
     }
 
-    public function destroy()
+    public function destroy($id)
     {
         $transaksidetail = TransaksiDetail::findOrFail($id);
 
-        $transaksi = Transaksi::with('transaksidetail')->findOrFail($transaksidetail->id_transaksi);
-        $transaksi->total_harga = sum subtotal;
-        $transaksi->kembalian = bayar - total_harga;
+        // $transaksi = Transaksi::with('transaksidetail')->findOrFail($transaksidetail->id_transaksi);
+        $transaksi = Transaksi::find($transaksidetail->id_transaksi);
+        $transaksi->total_harga = sum($transaksidetail->subtotal);
+        // $transaksi->kembalian = bayar - total_harga;
+        $transaksi -> kembalian = $transaksi -> bayar - $transaksi -> total_harga;
         $transaksi->save();
 
         return redirect('transaksidetail/'.$transaksidetail->id_transaksi)->with('pesan', 'Berhasil menghapus data');

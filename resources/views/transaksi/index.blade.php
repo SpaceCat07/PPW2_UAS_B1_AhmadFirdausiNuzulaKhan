@@ -1,4 +1,5 @@
-
+@extends('layouts')
+@section('content')
     <h2>Data Transaksi</h2>
     <div class="card">
         <div class="card-header bg-white">
@@ -22,13 +23,13 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach ( as $index => $data)
+                @foreach ( $transaksi as $index => $data)
                     <tr>
                         <td>{{ $index+1 }}</td>
-                        <td>{{ \Carbon\Carbon::parse($data->tanggal_)->format('d/m/Y') }}</td>
-                        <td class="text-end">{{ number_format($data->, 0, '.', '.') }}</td>
-                        <td class="text-end">{{ number_format($data->, 0, '.', '.') }}</td>
-                        <td class="text-end">{{ number_format($data->, 0, '.', '.') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($data->tanggal_pembelian)->format('d/m/Y') }}</td>
+                        <td class="text-end">{{ number_format($data->total_harga, 0, '.', '.') }}</td>
+                        <td class="text-end">{{ number_format($data->bayar, 0, '.', '.') }}</td>
+                        <td class="text-end">{{ number_format($data->kembalian, 0, '.', '.') }}</td>
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="{{ route('transaksi.edit', $data -> id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -41,8 +42,9 @@
                             </div>
                         </td>
                     </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-
+@endsection
